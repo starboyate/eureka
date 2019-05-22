@@ -46,12 +46,22 @@ import static com.netflix.appinfo.PropertyBasedInstanceConfigConstants.*;
  * </p>
  *
  * @author Karthik Ranganathan
- *
+ * 基于配置文件的Eureka应用实例配置抽象基类
  */
 public abstract class PropertiesInstanceConfig extends AbstractInstanceConfig implements EurekaInstanceConfig {
 
+    /**
+     * 命名空间
+     */
     protected final String namespace;
+    /**
+     * 配置文件对象，基于 Netflix Archaius 1.x 实现配置文件的读取
+     * {@link PropertyBasedInstanceConfigConstants}可以看到配置文件每个属性的key
+     */
     protected final DynamicPropertyFactory configInstance;
+    /**
+     * 应用分组，从环境变量获取
+     */
     private String appGrpNameFromEnv;
 
     public PropertiesInstanceConfig() {
@@ -69,14 +79,15 @@ public abstract class PropertiesInstanceConfig extends AbstractInstanceConfig im
 
     public PropertiesInstanceConfig(String namespace, DataCenterInfo info) {
         super(info);
-
+        // 设置 namespace，为 "." 结尾
         this.namespace = namespace.endsWith(".")
                 ? namespace
                 : namespace + ".";
-
+        // 从 环境变量 获取 应用分组，优先从配置文件读取
+        // ConfigurationManager：可以从环境变量获取到值
         appGrpNameFromEnv = ConfigurationManager.getConfigInstance()
                 .getString(FALLBACK_APP_GROUP_KEY, Values.UNKNOWN_APPLICATION);
-
+        // 初始化 配置文件对象
         this.configInstance = Archaius1Utils.initConfig(CommonConstants.CONFIG_FILE_NAME);
     }
 
@@ -235,6 +246,10 @@ public abstract class PropertiesInstanceConfig extends AbstractInstanceConfig im
         return configInstance.getStringProperty(namespace + APP_NAME_KEY, Values.UNKNOWN_APPLICATION).get().trim();
     }
 
+    /**
+     * 从环境变量中获取应用分组，可以看到还是优先从配置文件读取
+     * @return
+     */
     @Override
     public String getAppGroupName() {
         return configInstance.getStringProperty(namespace + APP_GROUP_KEY, appGrpNameFromEnv).get().trim();

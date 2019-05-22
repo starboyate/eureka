@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * their instance with eureka server.
  *
  * @author Karthik Ranganathan
- *
+ * Eureka应用实例配置抽象基类，主要实现了一些通用的配置
  */
 public abstract class AbstractInstanceConfig implements EurekaInstanceConfig {
     private static final Logger logger = LoggerFactory.getLogger(AbstractInstanceConfig.class);
@@ -41,15 +41,49 @@ public abstract class AbstractInstanceConfig implements EurekaInstanceConfig {
      */
     @Deprecated
     public static final String DEFAULT_NAMESPACE = CommonConstants.DEFAULT_CONFIG_NAMESPACE;
-    
+    /**
+     *  契约过期时间， 默认为 90 秒
+     */
     private static final int LEASE_EXPIRATION_DURATION_SECONDS = 90;
+
+    /**
+     * 租约续约频率，默认为 30 秒
+     */
     private static final int LEASE_RENEWAL_INTERVAL_SECONDS = 30;
+
+    /**
+     * 关闭应用 https 端口
+     */
     private static final boolean SECURE_PORT_ENABLED = false;
+
+    /**
+     * 开启应用 http 端口
+     */
     private static final boolean NON_SECURE_PORT_ENABLED = true;
+
+    /**
+     *  应用 http 端口，默认为80
+     */
     private static final int NON_SECURE_PORT = 80;
+
+    /**
+     * 应用 https 端口，默认为443
+     */
     private static final int SECURE_PORT = 443;
+
+    /**
+     *  应用初始化后是否开启， 默认不开启
+     */
     private static final boolean INSTANCE_ENABLED_ON_INIT = false;
+    /**
+     * 主机信息
+     * key：主机 IP 地址
+     * value：主机名
+     */
     private static final Pair<String, String> hostInfo = getHostInfo();
+    /**
+     * 数据中心信息
+     */
     private DataCenterInfo info = new DataCenterInfo() {
         @Override
         public Name getName() {
@@ -211,6 +245,12 @@ public abstract class AbstractInstanceConfig implements EurekaInstanceConfig {
         return hostInfo.first();
     }
 
+    /**
+     * 获取本地服务器的主机名和主机IP地址，如果主机有多网卡或者虚拟卡，就需要这样解决
+     * 1. 手动配置本机的hostname + /etc/hosts 文件，从而映射主机名和IP地址
+     * 2. 使用Spring-Cloud-Eureka-Client，参考{@link http://www.itmuch.com/spring-cloud-code-read/spring-cloud-code-read-eureka-registry-ip/?from=www.iocoder.cn}
+     * @return
+     */
     private static Pair<String, String> getHostInfo() {
         Pair<String, String> pair;
         try {

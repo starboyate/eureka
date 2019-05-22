@@ -20,9 +20,12 @@ package com.netflix.eureka;
  * A static holder for the server context for use in non-DI cases.
  *
  * @author David Liu
+ * Eureka-Server 上下文持有者
  */
 public class EurekaServerContextHolder {
-
+    /**
+     * Eureka-Server 上下文
+     */
     private final EurekaServerContext serverContext;
 
     private EurekaServerContextHolder(EurekaServerContext serverContext) {
@@ -34,7 +37,11 @@ public class EurekaServerContextHolder {
     }
 
     private static EurekaServerContextHolder holder;
-
+    /**
+     * 绑定EurekaServerContext
+     *
+     * @param serverContext Eureka-Server 上下文
+     */
     public static synchronized void initialize(EurekaServerContext serverContext) {
         holder = new EurekaServerContextHolder(serverContext);
     }

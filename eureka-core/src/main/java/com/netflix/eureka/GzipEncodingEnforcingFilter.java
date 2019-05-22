@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * transparently, there is no longer need to maintain uncompressed content. By adding this filter, Eureka
  * server will accept only GET requests that explicitly support gzip encoding replies. In the coming minor release
  * non-compressed replies will be dropped altogether, so this filter will become required.
- *
+ * GZIP 编码过滤器。
  * @author Tomasz Bak
  */
 @Singleton

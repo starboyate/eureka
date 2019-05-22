@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
  * <code>@Auto</code> annotated fields are serialized as is; Other fields are
  * serialized as specified by the <code>@Serializer</code>.
  * </p>
- *
+ * 应用实例信息对象，Eureka-Client向Eureka-Server注册改对象信息。注册成功后，可以被其他Eureka-Client发现识别
  * @author Karthik Ranganathan, Greg Kim
  */
 @ProvidedBy(EurekaConfigBasedInstanceInfoProvider.class)
@@ -1169,6 +1169,7 @@ public class InstanceInfo {
         if (this.status != status) {
             InstanceStatus prev = this.status;
             this.status = status;
+            // 设置 应用实例信息 数据一致
             setIsDirty();
             return prev;
         }

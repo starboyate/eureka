@@ -25,6 +25,7 @@ import java.util.List;
 
 /**
  * @author Tomasz Bak
+ * PeerAware应用对象注册表接口,提供 Eureka-Server 集群内注册信息的同步服务
  */
 public interface PeerAwareInstanceRegistry extends InstanceRegistry {
 

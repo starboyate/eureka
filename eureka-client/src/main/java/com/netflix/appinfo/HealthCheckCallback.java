@@ -38,6 +38,7 @@ package com.netflix.appinfo;
  *
  * @deprecated Use {@link com.netflix.appinfo.HealthCheckHandler} instead.
  * @author Karthik Ranganathan, Greg Kim
+ *  健康检查回调接口，已经被废弃，使用HealthCheckHandler代替
  */
 @Deprecated
 public interface HealthCheckCallback {

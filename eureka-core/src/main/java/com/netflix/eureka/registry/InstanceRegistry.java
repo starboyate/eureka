@@ -14,16 +14,17 @@ import java.util.Map;
 
 /**
  * @author Tomasz Bak
+ * 应用实例注册表接口，提供应用实例的注册与发现服务
  */
 public interface InstanceRegistry extends LeaseManager<InstanceInfo>, LookupService<String> {
-
+    // 开启与关闭相关
     void openForTraffic(ApplicationInfoManager applicationInfoManager, int count);
 
     void shutdown();
 
     @Deprecated
     void storeOverriddenStatusIfRequired(String id, InstanceStatus overriddenStatus);
-
+    // 应用实例状态变更相关
     void storeOverriddenStatusIfRequired(String appName, String id, InstanceStatus overriddenStatus);
 
     boolean statusUpdate(String appName, String id, InstanceStatus newStatus,
@@ -71,17 +72,17 @@ public interface InstanceRegistry extends LeaseManager<InstanceInfo>, LookupServ
     InstanceInfo getInstanceByAppAndId(String appName, String id, boolean includeRemoteRegions);
 
     void clearRegistry();
-
+    // 响应缓存相关
     void initializedResponseCache();
 
     ResponseCache getResponseCache();
-
+    // 自我保护模式相关
     long getNumOfRenewsInLastMin();
 
     int getNumOfRenewsPerMinThreshold();
 
     int isBelowRenewThresold();
-
+    // 调试/监控相关
     List<Pair<Long, String>> getLastNRegisteredInstances();
 
     List<Pair<Long, String>> getLastNCanceledInstances();

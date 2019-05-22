@@ -81,7 +81,7 @@ import org.slf4j.LoggerFactory;
  *     average rate - expected number of requests per second
  * </li>
  * </ul>
- *
+ * 请求限流过滤器
  * @author Tomasz Bak
  */
 @Singleton

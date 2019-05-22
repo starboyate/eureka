@@ -23,7 +23,7 @@ import com.netflix.discovery.shared.LookupService;
  *  - provide the ability to get InstanceInfo(s) (in various different ways)
  *  - provide the ability to get data about the local Client (known regions, own AZ etc)
  *  - provide the ability to register and access the healthcheck handler for the client
- *
+ * Eureka-Client 接口
  * @author David Liu
  */
 @ImplementedBy(DiscoveryClient.class)

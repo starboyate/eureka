@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * {@link AbstractInstanceConfig}.
  * </p>
  *
- *
+ * 应用信息管理器
  * @author Karthik Ranganathan, Greg Kim
  *
  */
@@ -57,10 +57,24 @@ public class ApplicationInfoManager {
 
     private static ApplicationInfoManager instance = new ApplicationInfoManager(null, null, null);
 
+    /**
+     * 状态变更监听器
+     */
     protected final Map<String, StatusChangeListener> listeners;
+
+    /**
+     * 应用实例匹配
+     */
     private final InstanceStatusMapper instanceStatusMapper;
 
+    /**
+     * 应用实例对象
+     */
     private InstanceInfo instanceInfo;
+
+    /**
+     * 应用实例配置
+     */
     private EurekaInstanceConfig config;
 
     public static class OptionalArgs {
@@ -161,7 +175,7 @@ public class ApplicationInfoManager {
      * Set the status of this instance. Application can use this to indicate
      * whether it is ready to receive traffic. Setting the status here also notifies all registered listeners
      * of a status change event.
-     *
+     * 设置应用实例信息的状态，从而通知 InstanceInfoReplicator#onDemandUpdate() 方法的调用
      * @param status Status of the instance
      */
     public synchronized void setInstanceStatus(InstanceStatus status) {
@@ -196,6 +210,9 @@ public class ApplicationInfoManager {
      * server on next heartbeat.
      *
      * see {@link InstanceInfo#getHostName()} for explanation on why the hostname is used as the default address
+     * 刷新 数据中心信息
+     * 一般情况下，我们使用的是非 RefreshableInstanceConfig 实现的配置类( 一般是 MyDataCenterInstanceConfig )，
+     * 因为 AbstractInstanceConfig.hostInfo 是静态属性，即使本机修改了 IP 等信息，Eureka-Client 进程也不会感知到。
      */
     public void refreshDataCenterInfoIfRequired() {
         String existingAddress = instanceInfo.getHostName();
@@ -262,6 +279,9 @@ public class ApplicationInfoManager {
         }
     }
 
+    /**
+     * 内部接口，监听应用实例信息状态的变更。
+     */
     public static interface StatusChangeListener {
         String getId();
 

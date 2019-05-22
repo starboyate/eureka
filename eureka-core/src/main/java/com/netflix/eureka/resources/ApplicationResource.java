@@ -143,6 +143,7 @@ public class ApplicationResource {
     @Consumes({"application/json", "application/xml"})
     public Response addInstance(InstanceInfo info,
                                 @HeaderParam(PeerEurekaNode.HEADER_REPLICATION) String isReplication) {
+        // 校验参数是否合法
         logger.debug("Registering instance {} (replication={})", info.getId(), isReplication);
         // validate that the instanceinfo contains all the necessary required fields
         if (isBlank(info.getId())) {
@@ -181,8 +182,9 @@ public class ApplicationResource {
                 }
             }
         }
-
+        // 注册应用实例信息
         registry.register(info, "true".equals(isReplication));
+        // 返回 204 成功
         return Response.status(204).build();  // 204 to be backwards compatible
     }
 

@@ -19,23 +19,44 @@ import com.netflix.discovery.shared.transport.jersey.TransportClientFactories;
 import com.netflix.eventbus.spi.EventBus;
 
 /**
+ * DiscoveryClient 可选参数抽象基类
  * <T> The type for client supplied filters (supports jersey1 and jersey2)
  */
 public abstract class AbstractDiscoveryClientOptionalArgs<T> {
+    /**
+     * 生成健康检查回调的工厂
+     */
     Provider<HealthCheckCallback> healthCheckCallbackProvider;
-
+    /**
+     * 生成健康检查处理器的工厂，目前暂未提供合适的默认实现，唯一提供的{@link com.netflix.appinfo.HealthCheckCallbackToHandlerBridge},
+     * 用于将 HealthCheckCallback 桥接成 HealthCheckHandler
+     */
     Provider<HealthCheckHandler> healthCheckHandlerProvider;
-
+    /**
+     * 向eureka-server注册之前的处理器，目前暂未提供默认实现，通过实现该接口，可以在注册之前做一些自定义的处理
+     */
     PreRegistrationHandler preRegistrationHandler;
-
+    /**
+     * Jersy 过滤器集合
+     */
     Collection<T> additionalFilters;
-
+    /**
+     * Jersey 客户端，该参数目前废弃，使用下面 TransportClientFactories 参数来进行生成。
+     */
     EurekaJerseyClient eurekaJerseyClient;
-    
+    /**
+     * 生成 Jersey 客户端的工厂的工厂
+     *
+     */
     TransportClientFactory transportClientFactory;
-    
+    /**
+     * Eureka 事件监听器集合，生成 Jersey 客户端工厂的工厂接口。目前有 Jersey1TransportClientFactories 、Jersey2TransportClientFactories 两个实现
+     */
     TransportClientFactories transportClientFactories;
 
+    /**
+     * Eureka 事件监听器集合
+     */
     private Set<EurekaEventListener> eventListeners;
 
     private Optional<SSLContext> sslContext = Optional.empty();

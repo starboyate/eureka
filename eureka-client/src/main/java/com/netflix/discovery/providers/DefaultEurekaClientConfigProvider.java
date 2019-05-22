@@ -11,6 +11,7 @@ import com.netflix.discovery.EurekaNamespace;
 /**
  * This provider is necessary because the namespace is optional.
  * @author elandau
+ * 创建 DefaultEurekaClientConfig 的工厂类
  */
 public class DefaultEurekaClientConfigProvider implements Provider<EurekaClientConfig> {
 

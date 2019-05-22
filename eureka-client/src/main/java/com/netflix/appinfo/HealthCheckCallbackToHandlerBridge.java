@@ -2,6 +2,8 @@ package com.netflix.appinfo;
 
 /**
  * @author Nitesh Kant
+ * HealthCheckHandler实现类，用于将 HealthCheckCallback 桥接成 HealthCheckHandler，
+ * 在 spring cloud 体系中，提供了默认实现EurekaHealthCheckHandler，需要结合 spirng-boot-actuate 使用
  */
 @SuppressWarnings("deprecation")
 public class HealthCheckCallbackToHandlerBridge implements HealthCheckHandler {
