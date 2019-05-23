@@ -18,11 +18,27 @@ public interface TaskProcessor<T> {
      * </ul>
      */
     enum ProcessingResult {
-        Success, Congestion, TransientError, PermanentError
+        /**
+         * 成功
+         */
+        Success,
+        /**
+         * 拥挤错误,任务将会被重试。例如，请求被限流
+         */
+        Congestion,
+        /**
+         * 瞬时错误,任务将会被重试。例如，网络请求超时。
+         */
+        TransientError,
+        /**
+         * 永久错误,任务将会被丢弃。例如，执行时发生程序异常。
+         */
+        PermanentError
     }
 
     /**
      * In non-batched mode a single task is processed at a time.
+     * 处理单任务
      */
     ProcessingResult process(T task);
 
@@ -30,6 +46,7 @@ public interface TaskProcessor<T> {
      * For batched mode a collection of tasks is run at a time. The result is provided for the aggregated result,
      * and all tasks are handled in the same way according to what is returned (for example are rescheduled, if the
      * error is transient).
+     * 处理批量任务
      */
     ProcessingResult process(List<T> tasks);
 }

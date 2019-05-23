@@ -79,7 +79,17 @@ public class Applications {
     }
 
     private static final String STATUS_DELIMITER = "_";
-
+    /**
+     * 应用集合一致性哈希码
+     * 增量获取注册的应用集合( Applications ) 时，Eureka-Client 会获取到：
+     * 1.Eureka-Server 近期变化( 注册、下线 )的应用集合
+     * 2.Eureka-Server 应用集合一致性哈希码
+     *
+     * Eureka-Client 将变化的应用集合和本地缓存的应用集合进行合并后进行计算本地的应用集合一致性哈希码。若两个哈希码相等，
+     * 意味着增量获取成功；若不相等，意味着增量获取失败，Eureka-Client 重新和 Eureka-Server 全量获取应用集合。
+     *
+     * Eureka 比较应用集合一致性哈希码，和日常我们通过哈希码比较两个对象是否相等类似
+     */
     private String appsHashCode;
     private Long versionDelta;
     @XStreamImplicit
@@ -228,11 +238,18 @@ public class Applications {
      *
      * @return the internal hash code representation indicating the information
      *         about the instances.
+     * 计算公式：appsHashCode = ${status}_${count}_
+     * 1.使用每个应用实例状态( status ) + 数量( count )拼接出一致性哈希码。若数量为 0 ，该应用实例状态不进行拼接。状态以字符串大小排序。
+     * 2.举个例子，8 个 UP ，0 个 DOWN ，则 appsHashCode = UP_8_ 。8 个 UP ，2 个 DOWN ，则 appsHashCode = DOWN_2_UP_8_
+     *
      */
     @JsonIgnore
     public String getReconcileHashCode() {
+        // 计数集合 key：应用实例状态
         TreeMap<String, AtomicInteger> instanceCountMap = new TreeMap<String, AtomicInteger>();
+        // 计算每个应用实例状态的数量
         populateInstanceCountMap(instanceCountMap);
+        // 计算 hashcode
         return getReconcileHashCode(instanceCountMap);
     }
 
@@ -246,6 +263,7 @@ public class Applications {
     public void populateInstanceCountMap(Map<String, AtomicInteger> instanceCountMap) {
         for (Application app : this.getRegisteredApplications()) {
             for (InstanceInfo info : app.getInstancesAsIsFromEureka()) {
+                // 计数
                 AtomicInteger instanceCount = instanceCountMap.computeIfAbsent(info.getStatus().name(),
                         k -> new AtomicInteger(0));
                 instanceCount.incrementAndGet();
@@ -261,6 +279,7 @@ public class Applications {
      * @param instanceCountMap
      *            the instance count map to use for generating the hash
      * @return the hash code for this instance
+     * 计算 hashcode
      */
     public static String getReconcileHashCode(Map<String, AtomicInteger> instanceCountMap) {
         StringBuilder reconcileHashCode = new StringBuilder(75);

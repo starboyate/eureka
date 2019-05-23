@@ -168,14 +168,16 @@ public class InstanceResource {
             @HeaderParam(PeerEurekaNode.HEADER_REPLICATION) String isReplication,
             @QueryParam("lastDirtyTimestamp") String lastDirtyTimestamp) {
         try {
+            // 应用实例不存在
             if (registry.getInstanceByAppAndId(app.getName(), id) == null) {
                 logger.warn("Instance not found: {}/{}", app.getName(), id);
                 return Response.status(Status.NOT_FOUND).build();
             }
+            // 覆盖状态更新
             boolean isSuccess = registry.statusUpdate(app.getName(), id,
                     InstanceStatus.valueOf(newStatus), lastDirtyTimestamp,
                     "true".equals(isReplication));
-
+            // 返回结果
             if (isSuccess) {
                 logger.info("Status updated: {} - {} - {}", app.getName(), id, newStatus);
                 return Response.ok().build();
@@ -201,6 +203,10 @@ public class InstanceResource {
      *            last timestamp when this instance information was updated.
      * @return response indicating whether the operation was a success or
      *         failure.
+     *  应用实例覆盖状态变更
+     *  请求参数 newStatusValue ，设置应用实例的状态。大多数情况下，newStatusValue 要和应用实例实际的状态一致，
+     *  因为该应用实例的 Eureka-Client 不会从 Eureka-Server 拉取到该应用状态 newStatusValue 。
+     *  另外一种方式，不传递该参数，相当于 UNKNOWN 状态，这样，Eureka-Client 会主动向 Eureka-Server 再次发起注册
      */
     @DELETE
     @Path("status")
@@ -209,15 +215,17 @@ public class InstanceResource {
             @QueryParam("value") String newStatusValue,
             @QueryParam("lastDirtyTimestamp") String lastDirtyTimestamp) {
         try {
+            // 应用实例不存在
             if (registry.getInstanceByAppAndId(app.getName(), id) == null) {
                 logger.warn("Instance not found: {}/{}", app.getName(), id);
                 return Response.status(Status.NOT_FOUND).build();
             }
-
+            // 覆盖状态删除
             InstanceStatus newStatus = newStatusValue == null ? InstanceStatus.UNKNOWN : InstanceStatus.valueOf(newStatusValue);
+
             boolean isSuccess = registry.deleteStatusOverride(app.getName(), id,
                     newStatus, lastDirtyTimestamp, "true".equals(isReplication));
-
+            // 返回结果
             if (isSuccess) {
                 logger.info("Status override removed: {} - {}", app.getName(), id);
                 return Response.ok().build();
@@ -279,6 +287,7 @@ public class InstanceResource {
      *            replicated from other nodes.
      * @return response indicating whether the operation was a success or
      *         failure.
+     * 接收下线请求
      */
     @DELETE
     public Response cancelLease(

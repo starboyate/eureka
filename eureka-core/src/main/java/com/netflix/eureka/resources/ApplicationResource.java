@@ -81,6 +81,7 @@ public class ApplicationResource {
      *            JSON or XML data.
      * @return the response containing information about a particular
      *         application.
+     *
      */
     @GET
     public Response getApplication(@PathParam("version") String version,
@@ -138,6 +139,7 @@ public class ApplicationResource {
      * @param isReplication
      *            a header parameter containing information whether this is
      *            replicated from other nodes.
+     * 接收注册controller
      */
     @POST
     @Consumes({"application/json", "application/xml"})

@@ -199,6 +199,12 @@ public abstract class AbstractJerseyEurekaHttpClient implements EurekaHttpClient
         return getApplicationsInternal("svips/" + secureVipAddress, regions);
     }
 
+    /**
+     * 全量获取注册信息
+     * @param urlPath
+     * @param regions
+     * @return
+     */
     private EurekaHttpResponse<Applications> getApplicationsInternal(String urlPath, String[] regions) {
         ClientResponse response = null;
         String regionsParamValue = null;

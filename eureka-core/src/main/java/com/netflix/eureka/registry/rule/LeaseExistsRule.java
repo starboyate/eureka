@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This rule matches if we have an existing lease for the instance that is UP or OUT_OF_SERVICE.
- *
+ * 匹配已存在租约的应用实例的 nstanceStatus.OUT_OF_SERVICE 或者 InstanceInfo.InstanceStatus.UP 状态
  * Created by Nikos Michalakis on 7/13/16.
  */
 public class LeaseExistsRule implements InstanceStatusOverrideRule {

@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This rule matches if the instance is DOWN or STARTING.
- *
+ * 匹配 InstanceInfo.InstanceStatus.DOWN 或者 InstanceInfo.InstanceStatus.STARTING 状态
  * Created by Nikos Michalakis on 7/13/16.
  */
 public class DownOrStartingRule implements InstanceStatusOverrideRule {

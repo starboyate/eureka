@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  *
  * This provider is @Singleton scope as it provides the InstanceInfo for both DiscoveryClient
  * and ApplicationInfoManager, and need to provide the same InstanceInfo to both.
- * 基于EurekaInstanceConfig创建InstanceInfo工厂类
+ *
  * @author elandau
  *
  */

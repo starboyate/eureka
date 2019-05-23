@@ -9,12 +9,17 @@ import java.util.List;
 /**
  * This rule takes an ordered list of rules and returns the result of the first match or the
  * result of the {@link AlwaysMatchInstanceStatusRule}.
- *
+ * 复合规则，以第一个匹配成功为准
  * Created by Nikos Michalakis on 7/13/16.
  */
 public class FirstMatchWinsCompositeRule implements InstanceStatusOverrideRule {
-
+    /**
+     * 复合规则集合
+     */
     private final InstanceStatusOverrideRule[] rules;
+    /**
+     * 默认规则
+     */
     private final InstanceStatusOverrideRule defaultRule;
     private final String compositeRuleName;
 
@@ -34,12 +39,14 @@ public class FirstMatchWinsCompositeRule implements InstanceStatusOverrideRule {
     public StatusOverrideResult apply(InstanceInfo instanceInfo,
                                       Lease<InstanceInfo> existingLease,
                                       boolean isReplication) {
+        // 使用复合规则，顺序匹配，直到匹配成功
         for (int i = 0; i < this.rules.length; ++i) {
             StatusOverrideResult result = this.rules[i].apply(instanceInfo, existingLease, isReplication);
             if (result.matches()) {
                 return result;
             }
         }
+        // 使用默认规则
         return defaultRule.apply(instanceInfo, existingLease, isReplication);
     }
 
